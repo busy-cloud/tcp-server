@@ -63,16 +63,6 @@
       }
     },
     {
-      "key": "server_id",
-      "label": "连接ID",
-      "action": {
-        "type": "page",
-        "app": "tcp-server",
-        "page": "tcp-server/server-detail",
-        "params_func": "return {id: data.server_id}"
-      }
-    },
-    {
       "key": "name",
       "label": "名称"
     },
@@ -88,6 +78,11 @@
     {
       "key": "protocol",
       "label": "协议"
+    },
+    {
+      "key": "disabled",
+      "label": "禁用",
+      "type": "bool"
     },
     {
       "key": "created",
