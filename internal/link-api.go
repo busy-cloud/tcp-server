@@ -41,7 +41,8 @@ func getLinksInfo(ds []*Link) error {
 func getLinkInfo(d *Link) error {
 	l := links.Load(d.Id)
 	if l != nil {
-		d.Status = l.Status
+		//d.Status = l.Status
+		d.Running = true
 	}
 	return nil
 }

@@ -6,18 +6,10 @@ import (
 	"net"
 )
 
-//type Link interface {
-//	io.ReadWriteCloser
-//	Open() error
-//	Opened() bool
-//	Connected() bool
-//	Error() string
-//}
-
 type Link struct {
-	link.Link //`xorm:"extends"`
-	link.Status
-	net.Conn
+	link.Link   `xorm:"extends"`
+	link.Status `xorm:"-"`
+	net.Conn    `xorm:"-"`
 }
 
 var links lib.Map[Link]
