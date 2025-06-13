@@ -1,0 +1,99 @@
+{
+  "title": "TCP连接",
+  "template": "table",
+  "toolbar": [
+    {
+      "key": "keyword",
+      "type": "text",
+      "placeholder": "请输入关键字"
+    },
+    {
+      "type": "button",
+      "icon": "search",
+      "label": "搜索",
+      "action": {
+        "type": "script",
+        "script": "this.keyword=this.toolbar.value.keyword; this.search()"
+      }
+    }
+  ],
+  "keywords": [
+    "id",
+    "name",
+    "description"
+  ],
+  "operators": [
+    {
+      "icon": "eye",
+      "action": {
+        "type": "page",
+        "app": "tcp-server",
+        "page": "tcp-server/link-detail",
+        "params_func": "return {id: data.id}"
+      }
+    },
+    {
+      "icon": "edit",
+      "action": {
+        "type": "page",
+        "app": "tcp-server",
+        "page": "tcp-server/link-edit",
+        "params_func": "return {id: data.id}"
+      }
+    },
+    {
+      "icon": "delete",
+      "title": "删除",
+      "confirm": "确认删除？",
+      "action": {
+        "type": "script",
+        "script": "this.request.get('tcp-server/link/'+data.id+'/delete').subscribe(res=>{this.load()})"
+      }
+    }
+  ],
+  "columns": [
+    {
+      "key": "id",
+      "label": "ID",
+      "action": {
+        "type": "page",
+        "app": "tcp-server",
+        "page": "tcp-server/link-detail",
+        "params_func": "return {id: data.id}"
+      }
+    },
+    {
+      "key": "server_id",
+      "label": "连接ID",
+      "action": {
+        "type": "page",
+        "app": "tcp-server",
+        "page": "tcp-server/server-detail",
+        "params_func": "return {id: data.server_id}"
+      }
+    },
+    {
+      "key": "name",
+      "label": "名称"
+    },
+    {
+      "key": "running",
+      "label": "运行",
+      "type": "boolean"
+    },
+    {
+      "key": "error",
+      "label": "错误"
+    },
+    {
+      "key": "protocol",
+      "label": "协议"
+    },
+    {
+      "key": "created",
+      "label": "日期",
+      "type": "date"
+    }
+  ],
+  "search_api": "tcp-server/link/search"
+}
