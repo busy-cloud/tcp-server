@@ -93,14 +93,19 @@ func (s *TcpServerImpl) Open() (err error) {
 func (s *TcpServerImpl) Close() error {
 	s.opened = false
 	var err error
+
+	//停止监听
+	if s.listener != nil {
+		err = multierr.Append(err, s.listener.Close())
+		//s.listener = nil
+	}
+
+	//关闭子连接
 	for _, conn := range s.children {
 		err = multierr.Append(err, conn.Close())
 	}
 	s.children = make(map[string]net.Conn)
-	if s.listener != nil {
-		err = multierr.Append(err, s.listener.Close())
-		s.listener = nil
-	}
+
 	return err
 }
 
