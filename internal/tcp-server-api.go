@@ -37,6 +37,8 @@ func init() {
 
 	api.Register("GET", "tcp-server/server/:id/open", serverOpen)
 	api.Register("GET", "tcp-server/server/:id/close", serverClose)
+
+	api.Register("GET", "tcp-server/server/:id/status", serverStatus)
 }
 
 func getServersInfo(ds []*TcpServer) error {
@@ -78,4 +80,14 @@ func serverOpen(ctx *gin.Context) {
 	}
 
 	api.OK(ctx, nil)
+}
+
+func serverStatus(ctx *gin.Context) {
+	l := servers.Load(ctx.Param("id"))
+	if l == nil {
+		api.Fail(ctx, "找不到服务器")
+		return
+	}
+
+	api.OK(ctx, l.Status)
 }

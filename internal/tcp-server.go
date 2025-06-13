@@ -2,7 +2,6 @@ package internal
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/busy-cloud/boat/db"
 	"github.com/busy-cloud/boat/mqtt"
@@ -53,7 +52,7 @@ type TcpServerImpl struct {
 
 var idReg = regexp.MustCompile(`^\w{2,128}$`)
 
-func NewTcpServerMultiple(l *TcpServer) *TcpServerImpl {
+func NewTcpServer(l *TcpServer) *TcpServerImpl {
 	server := &TcpServerImpl{
 		TcpServer: l,
 		buf:       make([]byte, 4096),
@@ -68,43 +67,16 @@ func NewTcpServerMultiple(l *TcpServer) *TcpServerImpl {
 	return server
 }
 
-func (s *TcpServerImpl) Read(p []byte) (n int, err error) {
-	return 0, errors.New("unsupported read")
-}
-
-func (s *TcpServerImpl) Write(p []byte) (n int, err error) {
-	return 0, errors.New("unsupported write")
-}
-
-func (s *TcpServerImpl) Opened() bool {
-	return s.opened
-}
-
-func (s *TcpServerImpl) Connected() bool {
-	return s.listener != nil
-}
-
-func (s *TcpServerImpl) Error() string {
-	return s.TcpServer.Error
-}
-
 func (s *TcpServerImpl) Open() (err error) {
-	defer func() {
-		if err != nil {
-			s.TcpServer.Error = err.Error()
-		} else {
-			s.TcpServer.Error = ""
-		}
-	}()
-
 	if s.opened {
 		_ = s.Close()
 	}
 
 	//addr := fmt.Sprintf("%s:%d", s.Address, s.Port)
-	addr := fmt.Sprintf("%s:%d", "", s.Port)
+	addr := fmt.Sprintf(":%d", s.Port)
 	s.listener, err = net.Listen("tcp", addr)
 	if err != nil {
+		s.Error = err.Error()
 		return
 	}
 
@@ -112,8 +84,8 @@ func (s *TcpServerImpl) Open() (err error) {
 
 	go s.accept()
 
-	topic := fmt.Sprintf("link/%s/open", s.Id)
-	mqtt.Publish(topic, nil)
+	//topic := fmt.Sprintf("link/%s/open", s.Id)
+	//mqtt.Publish(topic, nil)
 
 	return
 }
@@ -163,8 +135,10 @@ func (s *TcpServerImpl) receive(id string, reg []byte, conn net.Conn) {
 		}
 	}
 
-	//赋值连接
+	//赋值连接和状态
 	l.Conn = conn
+	l.Running = true
+	l.Error = ""
 
 	s.children[id] = &l
 	links.Store(id, &l)
@@ -198,6 +172,10 @@ func (s *TcpServerImpl) receive(id string, reg []byte, conn net.Conn) {
 		}
 	}
 
+	l.Conn = nil
+	l.Running = false
+	l.Error = e.Error()
+
 	//下线
 	topicClose := fmt.Sprintf("link/tcp-server/%s/close", id)
 	mqtt.Publish(topicClose, e.Error())
@@ -207,13 +185,16 @@ func (s *TcpServerImpl) receive(id string, reg []byte, conn net.Conn) {
 	}
 
 	delete(s.children, id)
-	links.Delete(id)
+	//links.Delete(id)
 }
 
 func (s *TcpServerImpl) accept() {
+	s.Running = true
+
 	for s.opened {
 		conn, err := s.listener.Accept()
 		if err != nil {
+			s.Error = err.Error()
 			break
 		}
 
@@ -281,4 +262,6 @@ func (s *TcpServerImpl) accept() {
 
 	_ = s.listener.Close()
 	s.listener = nil
+
+	s.Running = false
 }

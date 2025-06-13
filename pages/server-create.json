@@ -15,6 +15,12 @@
       "required": true
     },
     {
+      "key": "port",
+      "label": "端口",
+      "type": "number",
+      "required": true
+    },
+    {
       "key": "register_options",
       "label": "注册参数",
       "type": "object",

@@ -37,7 +37,7 @@ func StopServers() {
 }
 
 func FromServer(m *TcpServer) error {
-	server := NewTcpServerMultiple(m)
+	server := NewTcpServer(m)
 
 	//保存
 	val := servers.LoadAndStore(server.Id, server)
