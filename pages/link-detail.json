@@ -65,8 +65,7 @@
   "load_api": "tcp-server/link/:id",
   "children": [
     {
-      "app": "tcp-server",
-      "page": "tcp-server/device",
+      "page": "iot/device",
       "params_func": "return {link_id: params.id}"
     }
   ]

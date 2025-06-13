@@ -52,22 +52,13 @@
       "label": "名称"
     },
     {
-      "key": "type",
-      "label": "类型"
-    },
-    {
-      "key": "address",
-      "label": "地址"
+      "key": "description",
+      "label": "说明"
     },
     {
       "key": "port",
       "label": "端口",
       "type": "number"
-    },
-    {
-      "key": "serial_options",
-      "label": "串口参数",
-      "type": "object"
     },
     {
       "key": "register_options",
@@ -94,12 +85,5 @@
       "label": "错误"
     }
   ],
-  "load_api": "tcp-server/server/:id",
-  "children": [
-    {
-      "app": "tcp-server",
-      "page": "tcp-server/device",
-      "params_func": "return {server_id: params.id}"
-    }
-  ]
+  "load_api": "tcp-server/server/:id"
 }
