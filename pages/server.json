@@ -81,6 +81,11 @@
       "label": "端口"
     },
     {
+      "key": "multiple",
+      "label": "多入模式",
+      "type": "boolean"
+    },
+    {
       "key": "running",
       "label": "运行",
       "type": "boolean"

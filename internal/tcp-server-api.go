@@ -18,7 +18,7 @@ func init() {
 	api.Register("POST", "tcp-server/server/:id", curd.ApiUpdateHook[TcpServer](nil, func(m *TcpServer) error {
 		_ = FromServer(m)
 		return nil
-	}, "id", "name", "type", "address", "port", "register_options", "disabled", "protocol", "protocol_options"))
+	}, "id", "name", "type", "address", "port", "multiple", "register_options", "disabled", "protocol", "protocol_options"))
 
 	api.Register("GET", "tcp-server/server/:id/delete", curd.ApiDeleteHook[TcpServer](nil, func(m *TcpServer) error {
 		_ = UnloadServer(m.Id)
