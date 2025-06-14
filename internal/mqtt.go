@@ -10,7 +10,7 @@ func subscribe() {
 	//订阅数据变化
 	mqtt.Subscribe("link/tcp-server/+/down", func(topic string, payload []byte) {
 		ss := strings.Split(topic, "/")
-		conn := links.Load(ss[1])
+		conn := links.Load(ss[2])
 		if conn != nil {
 			_, _ = conn.Write(payload)
 		}
@@ -19,7 +19,7 @@ func subscribe() {
 	//关闭连接
 	//mqtt.Subscribe("link/tcp-server/+/kill", func(topic string, payload []byte) {
 	//	ss := strings.Split(topic, "/")
-	//	conn := links.Load(ss[1])
+	//	conn := links.Load(ss[2])
 	//	if conn != nil {
 	//		_ = conn.Close()
 	//	}
