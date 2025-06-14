@@ -61,6 +61,11 @@
       "type": "number"
     },
     {
+      "key": "multiple",
+      "label": "多入模式",
+      "type": "bool"
+    },
+    {
       "key": "register_options",
       "label": "注册参数",
       "type": "object"

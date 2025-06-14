@@ -21,9 +21,19 @@
       "required": true
     },
     {
+      "key": "multiple",
+      "type": "switch",
+      "label": "多入模式（注册包区分）"
+    },
+    {
       "key": "register_options",
       "label": "注册参数",
       "type": "object",
+      "condition": {
+        "key": "multiple",
+        "type": "=",
+        "value": true
+      },
       "children": [
         {
           "key": "type",
@@ -84,7 +94,7 @@
   "submit_success": "this.navigate('/page/tcp-server/server-detail?id='+data.id)",
   "mount": "this.load_protocols()",
   "methods": {
-    "load_protocols": "this.request.get('iot/protocol/list').subscribe(res=>{this.content.fields[4].options=res.data.map(d=>{return {value:d.name,label:d.description}}); setTimeout(()=>this.load_protocol_option(), 200);  })",
-    "load_protocol_option": "this.editor.value.protocol && this.request.get('iot/protocol/'+this.editor.value.protocol).subscribe(res=>{this.content.fields[5].children=res.options; setTimeout(()=>this.editor.rebuild(), 200)})"
+    "load_protocols": "this.request.get('iot/protocol/list').subscribe(res=>{this.content.fields[5].options=res.data.map(d=>{return {value:d.name,label:d.description}}); setTimeout(()=>this.load_protocol_option(), 200);  })",
+    "load_protocol_option": "this.editor.value.protocol && this.request.get('iot/protocol/'+this.editor.value.protocol).subscribe(res=>{this.content.fields[6].children=res.options; setTimeout(()=>this.editor.rebuild(), 200)})"
   }
 }

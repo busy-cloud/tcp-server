@@ -29,6 +29,7 @@ type TcpServer struct {
 	Name            string           `json:"name,omitempty"`
 	Description     string           `json:"description,omitempty"`
 	Port            uint16           `json:"port,omitempty"`                            //端口号
+	Multiple        bool             `json:"multiple,omitempty"`                        //多入（需要设置注册包）
 	RegisterOptions *RegisterOptions `json:"register_options,omitempty" xorm:"json"`    //注册包参数
 	Protocol        string           `json:"protocol,omitempty"`                        //通讯协议
 	ProtocolOptions map[string]any   `json:"protocol_options,omitempty" xorm:"json"`    //通讯协议参数
@@ -203,7 +204,13 @@ func (s *TcpServerImpl) accept() {
 			break
 		}
 
-		//TODO 读超时
+		//单例
+		if !s.Multiple {
+			s.receive(s.Id, nil, conn)
+			continue
+		}
+
+		//TODO 读超时??
 		n, e := conn.Read(s.buf[:])
 		if e != nil {
 			//log.Error(e)
