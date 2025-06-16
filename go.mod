@@ -5,7 +5,6 @@ go 1.23.6
 require (
 	github.com/busy-cloud/boat v0.5.2
 	github.com/busy-cloud/modbus v0.2.13
-	github.com/busy-cloud/serial v1.6.5
 	github.com/gin-gonic/gin v1.10.1
 	github.com/god-jason/iot-master v0.0.18
 	github.com/spf13/viper v1.20.1
@@ -62,7 +61,6 @@ require (
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.14 // indirect
-	github.com/zgwit/goselect v0.1.3 // indirect
 	golang.org/x/arch v0.17.0 // indirect
 	golang.org/x/crypto v0.38.0 // indirect
 	golang.org/x/net v0.40.0 // indirect

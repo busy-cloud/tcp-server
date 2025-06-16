@@ -153,12 +153,12 @@ func (s *TcpServerImpl) receive(id string, reg []byte, conn net.Conn) {
 	topicOpen := fmt.Sprintf("link/tcp-server/%s/open", id)
 	mqtt.Publish(topicOpen, reg)
 	if l.Protocol != "" {
-		topicOpen = fmt.Sprintf("protocol/%s/tcp-server/%s/open", l.Protocol, id)
+		topicOpen = fmt.Sprintf("protocol/%s/link/tcp-server/%s/open", l.Protocol, id)
 		mqtt.Publish(topicOpen, l.ProtocolOptions)
 	}
 
 	topicUp := fmt.Sprintf("link/tcp-server/%s/up", id)
-	topicUpProtocol := fmt.Sprintf("protocol/%s/tcp-server/%s/up", s.Protocol, id)
+	topicUpProtocol := fmt.Sprintf("protocol/%s/link/tcp-server/%s/up", s.Protocol, id)
 
 	var n int
 	var e error
@@ -186,7 +186,7 @@ func (s *TcpServerImpl) receive(id string, reg []byte, conn net.Conn) {
 	topicClose := fmt.Sprintf("link/tcp-server/%s/close", id)
 	mqtt.Publish(topicClose, e.Error())
 	if s.Protocol != "" {
-		topic := fmt.Sprintf("protocol/%s/tcp-server/%s/close", s.Protocol, id)
+		topic := fmt.Sprintf("protocol/%s/link/tcp-server/%s/close", s.Protocol, id)
 		mqtt.Publish(topic, e.Error())
 	}
 

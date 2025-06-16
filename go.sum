@@ -6,8 +6,6 @@ github.com/busy-cloud/boat v0.5.2 h1:QUskZpuB6Fr8dPhTK3XM7avaDj2WoCS0CNzojfk9txc
 github.com/busy-cloud/boat v0.5.2/go.mod h1:pArkdISo2peFMtlA61Cex6tftBZ7cXDqfgd/UKZ1zIU=
 github.com/busy-cloud/modbus v0.2.13 h1:nFCxZLWwApU/sz4Nfy4mgQVgbUZDr8HdULFENDm8Ha4=
 github.com/busy-cloud/modbus v0.2.13/go.mod h1:voMqngF86wuY2p4BWf7wfI/5xsmDrRLuVBfjhYqijm8=
-github.com/busy-cloud/serial v1.6.5 h1:rDq99/cEDFUfZNJ0WmI/6iZz7LvmEDQcyw2gibhLI/E=
-github.com/busy-cloud/serial v1.6.5/go.mod h1:8IkXeVoYe424W0/giUH1Z2YTa9eqPDk/FtRcCu/7khI=
 github.com/bytedance/sonic v1.13.2 h1:8/H1FempDZqC4VqjptGo14QQlJx8VdZJegxs6wwfqpQ=
 github.com/bytedance/sonic v1.13.2/go.mod h1:o68xyaF9u2gvVBuGHPlUVCy+ZfmNNO5ETf1+KgkJhz4=
 github.com/bytedance/sonic/loader v0.1.1/go.mod h1:ncP89zfokxS5LZrJxl5z0UJcsk4M4yY2JpfqGeCtNLU=
@@ -165,8 +163,6 @@ github.com/twitchyliquid64/golang-asm v0.15.1 h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS
 github.com/twitchyliquid64/golang-asm v0.15.1/go.mod h1:a1lVb/DtPvCB8fslRZhAngC2+aY1QWCk3Cedj/Gdt08=
 github.com/ugorji/go/codec v1.2.14 h1:yOQvXCBc3Ij46LRkRoh4Yd5qK6LVOgi0bYOXfb7ifjw=
 github.com/ugorji/go/codec v1.2.14/go.mod h1:UNopzCgEMSXjBc6AOMqYvWC1ktqTAfzJZUZgYf6w6lg=
-github.com/zgwit/goselect v0.1.3 h1:0kAVui7agIqP2QchiBnuOHbeMMD+7z72Hmrd9A92Nx0=
-github.com/zgwit/goselect v0.1.3/go.mod h1:ygq9Kn15bCJer7uXny3lvsCFPHNnfFBgIOExd3ufUC8=
 go.uber.org/goleak v1.3.0 h1:2K3zAYmnTNqV73imy9J1T3WC+gmCePx2hEGkimedGto=
 go.uber.org/goleak v1.3.0/go.mod h1:CoHD4mav9JJNrW/WLlf7HGZPjdw8EucARQHekz1X6bE=
 go.uber.org/multierr v1.11.0 h1:blXXJkSxSSfBVBlC76pxqeO+LN3aDfLQo+309xJstO0=
