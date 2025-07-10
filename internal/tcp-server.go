@@ -1,14 +1,17 @@
 package internal
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/busy-cloud/boat/db"
 	"github.com/busy-cloud/boat/mqtt"
 	"github.com/god-jason/iot-master/link"
+	"github.com/spf13/cast"
 	"go.uber.org/multierr"
 	"net"
 	"regexp"
+	"sync/atomic"
 	"time"
 )
 
@@ -17,11 +20,9 @@ func init() {
 }
 
 type RegisterOptions struct {
-	Type   string `json:"type,omitempty"`   //注册类型 string, json
-	Regex  string `json:"regex,omitempty"`  //ID正则表达式
-	Field  string `json:"field,omitempty"`  //注册包为JSON时，取一个字段作为ID
-	Offset uint16 `json:"offset,omitempty"` //偏移，用于处理固定包头
-	Length uint16 `json:"length,omitempty"` //取长度
+	Type  string `json:"type,omitempty"`  //注册类型 string, json, hex
+	Regex string `json:"regex,omitempty"` //ID正则表达式
+	Field string `json:"field,omitempty"` //注册包为JSON时，取一个字段作为ID
 }
 
 type TcpServer struct {
@@ -30,6 +31,7 @@ type TcpServer struct {
 	Description     string           `json:"description,omitempty"`
 	Port            uint16           `json:"port,omitempty"`                            //端口号
 	Multiple        bool             `json:"multiple,omitempty"`                        //多入（需要设置注册包）
+	Register        bool             `json:"register,omitempty"`                        //启用注册包
 	RegisterOptions *RegisterOptions `json:"register_options,omitempty" xorm:"json"`    //注册包参数
 	Protocol        string           `json:"protocol,omitempty"`                        //通讯协议
 	ProtocolOptions map[string]any   `json:"protocol_options,omitempty" xorm:"json"`    //通讯协议参数
@@ -49,6 +51,8 @@ type TcpServerImpl struct {
 	children map[string]net.Conn
 
 	regex *regexp.Regexp
+
+	increment atomic.Uint64
 }
 
 var idReg = regexp.MustCompile(`^\w{2,128}$`)
@@ -59,11 +63,13 @@ func NewTcpServer(l *TcpServer) *TcpServerImpl {
 		buf:       make([]byte, 4096),
 		children:  make(map[string]net.Conn),
 	}
-	if server.RegisterOptions != nil && server.RegisterOptions.Regex != "" {
-		server.regex, _ = regexp.Compile("^" + server.RegisterOptions.Regex + "$")
-	}
-	if server.regex == nil {
-		server.regex = idReg
+	if server.Register {
+		if server.RegisterOptions != nil && server.RegisterOptions.Regex != "" {
+			server.regex, _ = regexp.Compile("^" + server.RegisterOptions.Regex + "$")
+		}
+		if server.regex == nil {
+			server.regex = idReg
+		}
 	}
 	return server
 }
@@ -210,7 +216,15 @@ func (s *TcpServerImpl) accept() {
 			continue
 		}
 
-		//TODO 读超时??
+		//未启用注册包
+		if !s.Register {
+			inc := s.increment.Add(1)
+			id := fmt.Sprintf("%s.%d", s.Id, inc)
+			s.receive(id, nil, conn)
+			continue
+		}
+
+		//读超时??
 		n, e := conn.Read(s.buf[:])
 		if e != nil {
 			//log.Error(e)
@@ -218,44 +232,45 @@ func (s *TcpServerImpl) accept() {
 			continue
 		}
 		data := s.buf[:n]
-
-		if s.RegisterOptions != nil {
-			//去头
-			if s.RegisterOptions.Offset > 0 {
-				if int(s.RegisterOptions.Offset) > len(data) {
-					_, _ = conn.Write([]byte("id too small"))
-					_ = conn.Close()
-					continue
-				}
-				data = data[s.RegisterOptions.Offset:]
-			}
-			//取定长
-			if s.RegisterOptions.Length > 0 {
-				if int(s.RegisterOptions.Length) > len(data) {
-					_, _ = conn.Write([]byte("id too small"))
-					_ = conn.Close()
-					continue
-				}
-				data = data[:s.RegisterOptions.Length]
-			}
-		}
-
 		id := string(data)
 
-		//处理json包
-		if s.RegisterOptions != nil && s.RegisterOptions.Type == "json" {
+		if s.RegisterOptions == nil {
+			s.receive(id, nil, conn)
+			continue
+		}
+
+		//注册包类型
+		switch s.RegisterOptions.Type {
+		case "string":
+		case "hex":
+			id = hex.EncodeToString(data)
+		case "json":
 			var reg map[string]any
 			err = json.Unmarshal(data, &reg)
 			if err != nil {
-				_, _ = conn.Write([]byte(err.Error()))
+				_, _ = conn.Write([]byte("require json pack"))
 				_ = conn.Close()
 				continue
 			}
 
-			var ok bool
-			id, ok = reg[s.RegisterOptions.Field].(string)
-			if !ok {
+			//默认字段是id
+			if v, ok := reg[s.RegisterOptions.Field]; ok {
+				id = cast.ToString(v)
+			} else {
 				_, _ = conn.Write([]byte("require field " + s.RegisterOptions.Field))
+				_ = conn.Close()
+				continue
+			}
+
+			//取默认id
+			if v, ok := reg["id"]; ok {
+				id = cast.ToString(v)
+			} else if v, ok = reg["sn"]; ok {
+				id = cast.ToString(v)
+			} else if v, ok = reg["key"]; ok {
+				id = cast.ToString(v)
+			} else {
+				_, _ = conn.Write([]byte("require id field "))
 				_ = conn.Close()
 				continue
 			}

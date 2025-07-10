@@ -23,14 +23,24 @@
     {
       "key": "multiple",
       "type": "switch",
-      "label": "多入模式（注册包区分）"
+      "label": "多入模式"
+    },
+    {
+      "key": "register",
+      "type": "switch",
+      "label": "启用注册包",
+      "condition": {
+        "key": "multiple",
+        "type": "=",
+        "value": true
+      }
     },
     {
       "key": "register_options",
       "label": "注册参数",
       "type": "object",
       "condition": {
-        "key": "multiple",
+        "key": "register",
         "type": "=",
         "value": true
       },
@@ -43,6 +53,10 @@
             {
               "value": "string",
               "label": "字符串"
+            },
+            {
+              "value": "hex",
+              "label": "二进制"
             },
             {
               "value": "json",
@@ -59,16 +73,6 @@
           "key": "field",
           "label": "JSON字段",
           "type": "text"
-        },
-        {
-          "key": "offset",
-          "label": "偏移",
-          "type": "number"
-        },
-        {
-          "key": "length",
-          "label": "长度",
-          "type": "number"
         }
       ]
     },
@@ -95,6 +99,6 @@
   "mount": "this.load_protocols()",
   "methods": {
     "load_protocols": "this.request.get('iot/protocol/list').subscribe(res=>{this.content.fields[5].options=res.data.map(d=>{return {value:d.name,label:d.description}}); setTimeout(()=>this.load_protocol_option(), 200);  })",
-    "load_protocol_option": "this.editor.value.protocol && this.request.get('iot/protocol/'+this.editor.value.protocol).subscribe(res=>{this.content.fields[6].children=res.options; setTimeout(()=>this.editor.rebuild(), 200)})"
+    "load_protocol_option": "this.editor.value.protocol && this.request.get('iot/protocol/'+this.editor.value.protocol).subscribe(res=>{this.content.fields[7].children=res.options; setTimeout(()=>this.editor.rebuild(), 200)})"
   }
 }
