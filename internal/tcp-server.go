@@ -122,32 +122,34 @@ func (s *TcpServerImpl) receive(id string, reg []byte, conn net.Conn) {
 	//xorm.ErrNotExist //db.Engine.Exist()
 	//.Where("linker=", "tcp-server").And("id=", id)
 
-	//只有多入，且包含注册包的，才入库
-	if s.Multiple && s.Register {
-		has, err := db.Engine().ID(id).Get(&l)
-		if err != nil {
-			_, _ = conn.Write([]byte(err.Error()))
-			_ = conn.Close()
-			return
-		}
-		//查不到
-		if !has {
-			l.Id = id
-			l.Linker = "tcp-server"
-			l.Protocol = s.Protocol //继承协议
-			l.ProtocolOptions = s.ProtocolOptions
+	has, err := db.Engine().ID(id).Get(&l)
+	if err != nil {
+		_, _ = conn.Write([]byte(err.Error()))
+		_ = conn.Close()
+		return
+	}
+
+	//查不到
+	if !has {
+		l.Id = id
+		l.Linker = "tcp-server"
+		l.Protocol = s.Protocol //继承协议
+		l.ProtocolOptions = s.ProtocolOptions
+
+		//只有多入，且包含注册包的，才入库
+		if s.Multiple && s.Register {
 			_, err = db.Engine().InsertOne(&l)
 			if err != nil {
 				_, _ = conn.Write([]byte(err.Error()))
 				_ = conn.Close()
 				return
 			}
-		} else {
-			if l.Disabled {
-				_, _ = conn.Write([]byte("disabled"))
-				_ = conn.Close()
-				return
-			}
+		}
+	} else {
+		if l.Disabled {
+			_, _ = conn.Write([]byte("disabled"))
+			_ = conn.Close()
+			return
 		}
 	}
 
