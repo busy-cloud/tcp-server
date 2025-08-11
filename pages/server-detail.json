@@ -8,7 +8,6 @@
       "label": "编辑",
       "action": {
         "type": "page",
-        "app": "tcp-server",
         "page": "tcp-server/server-edit",
         "params_func": "return {id: data.id}"
       }
@@ -20,7 +19,7 @@
       "confirm": "确认删除？",
       "action": {
         "type": "script",
-        "script": "this.request.get('tcp-server/server/'+data.id+'/delete').subscribe(res=>{this.navigate('/page/tcp-server/server')})"
+        "script": "this.request.get('table/tcp-server/delete/'+data.id).subscribe(res=>{this.navigate('/page/tcp-server/server')})"
       }
     },
     {
@@ -90,5 +89,5 @@
       "label": "错误"
     }
   ],
-  "load_api": "tcp-server/server/:id"
+  "load_api": "table/tcp-server/:id"
 }

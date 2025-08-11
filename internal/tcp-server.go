@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/busy-cloud/boat/db"
 	"github.com/busy-cloud/boat/mqtt"
-	"github.com/god-jason/iot-master/link"
 	"github.com/spf13/cast"
 	"go.uber.org/multierr"
 	"net"
@@ -14,10 +13,6 @@ import (
 	"sync/atomic"
 	"time"
 )
-
-func init() {
-	db.Register(&TcpServer{})
-}
 
 type RegisterOptions struct {
 	Type  string `json:"type,omitempty"`  //注册类型 string, json, hex
@@ -38,7 +33,7 @@ type TcpServer struct {
 	Disabled        bool             `json:"disabled,omitempty"`                        //禁用
 	Created         time.Time        `json:"created,omitempty,omitzero" xorm:"created"` //创建时间
 
-	link.Status `xorm:"-"`
+	Status `xorm:"-"`
 }
 
 type TcpServerImpl struct {
@@ -155,8 +150,6 @@ func (s *TcpServerImpl) receive(id string, reg []byte, conn net.Conn) {
 
 	//赋值连接和状态
 	l.Conn = conn
-	l.Running = true
-	l.Error = ""
 
 	s.children[id] = &l
 	links.Store(id, &l)
@@ -191,8 +184,6 @@ func (s *TcpServerImpl) receive(id string, reg []byte, conn net.Conn) {
 	}
 
 	l.Conn = nil
-	l.Running = false
-	l.Error = e.Error()
 
 	//下线
 	topicClose := fmt.Sprintf("link/tcp-server/%s/close", id)

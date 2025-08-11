@@ -2,38 +2,10 @@ package internal
 
 import (
 	"github.com/busy-cloud/boat/api"
-	"github.com/busy-cloud/boat/curd"
 	"github.com/gin-gonic/gin"
 )
 
 func init() {
-	api.Register("GET", "tcp-server/server/list", curd.ApiListHook[TcpServer](getServersInfo))
-	api.Register("POST", "tcp-server/server/search", curd.ApiSearchHook[TcpServer](getServersInfo))
-	api.Register("POST", "tcp-server/server/create", curd.ApiCreateHook[TcpServer](nil, func(m *TcpServer) error {
-		_ = FromServer(m)
-		return nil
-	}))
-	api.Register("GET", "tcp-server/server/:id", curd.ApiGetHook[TcpServer](getServerInfo))
-
-	api.Register("POST", "tcp-server/server/:id", curd.ApiUpdateHook[TcpServer](nil, func(m *TcpServer) error {
-		_ = FromServer(m)
-		return nil
-	}, "id", "name", "type", "port", "multiple", "register_options", "disabled", "protocol", "protocol_options"))
-
-	api.Register("GET", "tcp-server/server/:id/delete", curd.ApiDeleteHook[TcpServer](nil, func(m *TcpServer) error {
-		_ = UnloadServer(m.Id)
-		return nil
-	}))
-
-	api.Register("GET", "tcp-server/server/:id/enable", curd.ApiDisableHook[TcpServer](false, nil, func(id any) error {
-		_ = LoadServer(id.(string))
-		return nil
-	}))
-
-	api.Register("GET", "tcp-server/server/:id/disable", curd.ApiDisableHook[TcpServer](true, nil, func(id any) error {
-		_ = UnloadServer(id.(string))
-		return nil
-	}))
 
 	api.Register("GET", "tcp-server/server/:id/open", serverOpen)
 	api.Register("GET", "tcp-server/server/:id/close", serverClose)

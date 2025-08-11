@@ -93,7 +93,7 @@
       "children": []
     }
   ],
-  "submit_api": "tcp-server/server/create",
+  "submit_api": "table/tcp-server/create",
   "submit_success": "this.navigate('/page/tcp-server/server-detail?id='+data.id)",
   "mount": "this.load_protocols()",
   "methods": {
