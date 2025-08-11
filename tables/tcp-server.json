@@ -1,5 +1,5 @@
 {
-  "name": "tcp-server",
+  "name": "tcp_server",
   "comment": "TCP服务端",
   "fields": [
     {
