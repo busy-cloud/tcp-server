@@ -93,8 +93,8 @@
       "children": []
     }
   ],
-  "load_api": "table/tcp-server/:id",
-  "submit_api": "table/tcp-server/:id",
+  "load_api": "table/tcp_server/:id",
+  "submit_api": "table/tcp_server/:id",
   "submit_success": "this.navigate('/page/tcp-server/server-detail?id='+data.id)",
   "mount": "this.load_protocols()",
   "methods": {

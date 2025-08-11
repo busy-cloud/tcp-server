@@ -46,5 +46,5 @@
       "label": "端口"
     }
   ],
-  "search_api": "table/tcp-server/search"
+  "search_api": "table/tcp_server/search"
 }

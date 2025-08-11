@@ -54,7 +54,7 @@
       "confirm": "确认删除？",
       "action": {
         "type": "script",
-        "script": "this.request.get('table/tcp-server/delete/'+data.id+'').subscribe(res=>{this.load()})"
+        "script": "this.request.get('table/tcp_server/delete/'+data.id).subscribe(res=>{this.load()})"
       }
     }
   ],
@@ -100,5 +100,5 @@
       "type": "date"
     }
   ],
-  "search_api": "table/tcp-server/search"
+  "search_api": "table/tcp_server/search"
 }
