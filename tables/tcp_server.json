@@ -1,7 +1,7 @@
 {
   "name": "tcp_server",
   "comment": "TCP服务端",
-  "fields": [
+  "columns": [
     {
       "name": "id",
       "comment": "ID",

@@ -21,11 +21,6 @@
           "name": "TCP服务器",
           "url": "page/tcp-server/server",
           "icon": "tcp.png"
-        },
-        {
-          "name": "TCP连接",
-          "url": "page/tcp-server/link",
-          "icon": "link.png"
         }
       ]
     }
