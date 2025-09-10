@@ -45,6 +45,11 @@ func serverClose(ctx *gin.Context) {
 }
 
 func serverOpen(ctx *gin.Context) {
+	l := servers.Load(ctx.Param("id"))
+	if l != nil {
+		_ = l.Close()
+	}
+
 	err := LoadServer(ctx.Param("id"))
 	if err != nil {
 		api.Error(ctx, err)
